@@ -24,7 +24,7 @@ function App() {
   }
 
   const onMouseMove = (e) => {
-    if (hold == true) { 
+    if (hold == true && paths.length > 0) { 
       const currCoord = {x: e.clientX, y: e.clientY};
       paths[paths.length - 1].push(currCoord)
       setPaths((oldPaths) => [...oldPaths]);
