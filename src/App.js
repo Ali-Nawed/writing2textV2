@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { drawPath } from "./draw";
 import * as tf from '@tensorflow/tfjs';
@@ -11,8 +10,10 @@ function App() {
   const [model, setModel] = useState();
   const [predictions, setPredictions] = useState();
   const [imageData, setImageData] = useState();
+  const [predictedNumberText, setPredictedNumberText] = useState('');
   const canvasWidth = 400;
   const canvasHeight = 400;
+
   useEffect(() => {
     const canvasObj = canvasRef.current;
     const ctx = canvasObj.getContext('2d');
@@ -36,7 +37,9 @@ function App() {
         const output = model.predict(img);
         const predictions = Array.from(output.dataSync());
         setPredictions((oldPredictions) => predictions);
-        
+        const predictionNumber = argMax(predictions);
+        setPredictedNumberText((oldPredictionsNumber) => predictionNumber);
+        console.log(predictionNumber);
       }
     });
   }
@@ -63,14 +66,14 @@ function App() {
 
   const onMouseUp = (e) => {
     if (hold === true) {
-      predict(imageData);
-      console.log(predictions);
+      const x = predict(imageData);
     }
       setHold(false);
     }
 
   const clearCanvas = (e) => {
     setPaths((oldPaths) => []);
+    setPredictedNumberText((oldPredictionsNumber) => '');
   } 
 
   return ([
@@ -82,6 +85,9 @@ function App() {
     <button style={{height: '30px', width : '400px'}} onClick={clearCanvas}>
       Clear
     </button>
+    <text>
+      {predictedNumberText}
+    </text>
     </div>])
 }
 
